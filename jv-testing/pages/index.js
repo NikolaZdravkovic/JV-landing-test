@@ -1,8 +1,40 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { useState } from 'react'
+
+
 
 export default function Home() {
+
+  const [userName, setUsername] = useState('')
+  console.log(userName)
+
+  const login =()=>{
+    let today = new Date()
+    const dd = String(today.getDate()).padStart(2, '0')
+    const mm = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+    const yyyy = today.getFullYear()
+    const time =
+      today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
+  
+    today = mm + '/' + dd + '/' + yyyy + '--' + time
+    const data = {
+      username:userName,
+      walletAddress: 'testing',
+      hasNft: 'Yes',
+      date: today,
+    }
+    fetch('/api/sheet', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  }
+
+
   return (
     <div className={styles.container}>
       <Head>
@@ -22,10 +54,13 @@ export default function Home() {
         </p>
 
         <div>
-          <input type="text" />
+          <input type="text"
+            value={userName}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
         <br />
-        <button>SEND SHEET</button>
+        <button onClick={login}>SEND SHEET</button>
       </main>
 
       <footer className={styles.footer}>
